@@ -8,6 +8,10 @@ Scripts to automatically install noiireism's Hololive Advent cursors on Linux (K
 4) Place the script with the .ani files (and `chmod +x` if necessary)
 5) Run the script
 
-The cursor should be now installed, go to KDE's settings and select the cursor theme.
+The cursor should be now installed
+### On KDE
+Go to KDE's settings and select the cursor theme.
+### On GNOME
+Use gnome-tweaks to select the cursor theme.
 
 Note: The cursors are installed locally for your user
