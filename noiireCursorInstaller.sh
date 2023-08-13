@@ -30,7 +30,6 @@ inString=false
 while IFS= read -r line
 do
 	case "$line" in ("[Strings]"*)
-		echo "Matching line: $line"
 		inString=true
 	;; esac
 	if [ "$inString" = true ]; then
@@ -103,7 +102,6 @@ do
 	fi
 done < "$input"
 
-exit
 
 # Create folders with theme name
 output="$HOME/.icons/$name/cursors"
