@@ -13,7 +13,7 @@ VENV="${HOME}/cursorVenv"
 if [ ! -d ${VENV} ]
 then
 	echo "Venv does not exist, creating virtual environment..."
-	python -m venv ${VENV}
+	python3 -m venv ${VENV}
 	echo "Done! Installing win2xcur..."
 	${VENV}/bin/pip install win2xcur
 	echo "Done!"
