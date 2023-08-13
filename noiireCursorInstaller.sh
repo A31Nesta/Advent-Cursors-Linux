@@ -13,7 +13,7 @@ VENV="${HOME}/cursorVenv"
 if [ ! -d ${VENV} ]
 then
 	echo "Venv does not exist, creating virtual environment..."
-	python -m venv ${VENV}
+	python3 -m venv ${VENV}
 	echo "Done! Installing win2xcur..."
 	${VENV}/bin/pip install win2xcur
 	echo "Done!"
@@ -29,79 +29,79 @@ input="$dir/Install.inf"
 inString=false
 while IFS= read -r line
 do
-	# This is cursed but idk why it doesn't work normally
-	if [ "${line:0:9}" = "[Strings]" ]; then
+	case "$line" in ("[Strings]"*)
 		inString=true
-	elif [ "$inString" = true ]; then
+	;; esac
+	if [ "$inString" = true ]; then
 
-		if [ "${line:0:7}" = "pointer" ]; then
+		case "$line" in
+		"pointer"*)
 			pointer=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Pointer: $pointer"
-
-		elif [ "${line:0:4}" = "help" ]; then
+		;;
+		"help"*)
 			help=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Help: $help"
-
-		elif [ "${line:0:4}" = "work" ]; then
+		;;
+		"work"*)
 			work=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Work: $work"
-
-		elif [ "${line:0:4}" = "busy" ]; then
+		;;
+		"busy"*)
 			busy=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Busy: $busy"
-
-		elif [ "${line:0:4}" = "text" ]; then
+		;;
+		"text"*)
 			text=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Text: $text"
-
+		;;
 		# There's a typo, so in case the typo is fixed at some point I've added
 		# both 'unavailiable' and 'unavailable' as options
-		elif [ "${line:0:12}" = "unavailiable" ]; then
+		"unavailiable"*|"unavailable"*)
 			unavailable=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Unavailable: $unavailable"
-		elif [ -z "$unavailable" ] && [ "${line:0:11}" = "unavailable" ]; then
-			unavailable=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
-			echo "File name for Unavailable: $unavailable"
-
-		elif [ "${line:0:4}" = "vert" ]; then
+		;;
+		"vert"*)
 			vert=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Vert: $vert"
-
-		elif [ "${line:0:4}" = "horz" ]; then
+		;;
+		"horz"*)
 			horz=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Horz: $horz"
-
-		elif [ "${line:0:4}" = "dgn1" ]; then
+		;;
+		"dgn1"*)
 			dgn1=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Dgn1: $dgn1"
-
-		elif [ "${line:0:4}" = "dgn2" ]; then
+		;;
+		"dgn2"*)
 			dgn2=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Dgn2: $dgn2"
-
-		elif [ "${line:0:4}" = "move" ]; then
+		;;
+		"move"*)
 			move=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Move: $move"
-
-		elif [ "${line:0:4}" = "link" ]; then
+		;;
+		"link"*)
 			link=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Link: $link"
-
-		elif [ "${line:0:5}" = "cross" ]; then
+		;;
+		"cross"*)
 			cross=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Cross: $cross"
-
-		elif [ "${line:0:4}" = "hand" ]; then
+		;;
+		"hand"*)
 			hand=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "File name for Hand: $hand"
-
+		;;
 		# Name of the Theme
-		elif [ "${line:0:11}" = "SCHEME_NAME" ]; then
+		"SCHEME_NAME"*)
 			name=$(echo "$line" | cut -d \" -f 2 | cut -d . -f 1)
 			echo "Name of the Theme: $name"
-		fi
+		;;
+		esac
 	fi
 done < "$input"
+
 
 # Create folders with theme name
 output="$HOME/.icons/$name/cursors"
