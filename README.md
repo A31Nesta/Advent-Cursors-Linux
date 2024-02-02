@@ -3,6 +3,8 @@ Script to automatically install noiireism's cursors on Linux
 
 (Originally made for their Hololive Advent cursors)
 
+Requires ImageMagick to work. I'll update the installer to detect if ImageMagick is not installed soon™
+
 ## Usage
 1) Download the cursor from noiireism and extract the zip
 2) Download `noiireCursorInstaller.sh` (click on the file then download raw)
