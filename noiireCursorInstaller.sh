@@ -6,6 +6,12 @@
 ## This script should for any cursor theme
 ## made by Noiire (@noiireism on twitter)
 
+whenTerminate () {
+  echo; echo "Script is terminated by user."
+  exit
+}
+
+trap "whenTerminate" INT        # Set SIGINT trap to call function.
 
 # Check for the virtual env
 VENV="${HOME}/cursorVenv"
@@ -19,13 +25,44 @@ then
 	echo "Done!"
 fi
 
+# Check if win2xcur is installed
+if [ ! -f ${VENV}/bin/win2xcur ]
+then
+	echo "Win2xcur is not installed successfully, reinstalling..."
+	echo "Recreating virtual environment..."
+	rm -rf ${VENV}
+	python3 -m venv ${VENV}
+	echo "Done! Installing win2xcur..."
+	${VENV}/bin/pip install win2xcur
+	echo "Done!"
+fi
+
 dir="."
 
 # Read Install.inf to get cursor names
 # apparently all of noiire's cursors include that
 # file, making it possible to create a universal
 # install script
+
 input="$dir/Install.inf"
+inputBackup="$dir/Install-backup.inf"
+
+charset=$(file -i "$input" | cut -d '=' -f 2)
+echo "Charset is \"${charset}\""
+
+echo "Backing up original Install.inf to ${inputBackup}"
+cp "$input" "$inputBackup"
+
+# Detect if the encoding of Install.inf is utf-8
+if [ ! "$charset" = "utf-8" ]
+then
+	# If not, change the encoding
+	iconv -f GB2312 -t UTF-8 "$inputBackup" > "$input"
+fi
+
+# Make sure "Install.inf" is ended with an empty line, or the last line won't be parsed
+echo "" >> "$input"
+
 inString=false
 while IFS= read -r line
 do
@@ -102,10 +139,26 @@ do
 	fi
 done < "$input"
 
+echo "Restoring original Install.inf"
+mv "$inputBackup" "$input"
 
 # Create folders with theme name
 output="$HOME/.icons/$name/cursors"
 outputRoot="$HOME/.icons/$name"
+
+# Check if the folder already exists
+if [ -d "${outputRoot}" ]
+then
+	echo "Directory \"${outputRoot}\" already exists, do you want to overwrite it? (y/N)"
+	read -r answer
+	if [ ! "$answer" = "y" ]
+	then
+		echo "Exiting..."
+		exit
+	fi
+	# Else, remove the directory
+	rm -rf "${outputRoot}"
+fi
 
 if [ ! -d "${output}" ]
 then
